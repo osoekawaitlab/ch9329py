@@ -39,8 +39,8 @@ def test_mouse_button_events(
         driver.send_mouse_state(pych9329.MouseInput())
 
     expected_codes_and_values = [
-        (pych9329.MouseButton.BTN_LEFT.name, 1),
-        (pych9329.MouseButton.BTN_LEFT.name, 0),
+        (f"('{pych9329.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 1),
+        (f"('{pych9329.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 0),
         (pych9329.MouseButton.BTN_RIGHT.name, 1),
         (pych9329.MouseButton.BTN_RIGHT.name, 0),
     ]
@@ -72,9 +72,9 @@ def test_mouse_multiple_buttons(
         driver.send_mouse_state(pych9329.MouseInput())
 
     expected_codes_and_values = [
-        (pych9329.MouseButton.BTN_LEFT.name, 1),
+        (f"('{pych9329.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 1),
         (pych9329.MouseButton.BTN_RIGHT.name, 1),
-        (pych9329.MouseButton.BTN_LEFT.name, 0),
+        (f"('{pych9329.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 0),
         (pych9329.MouseButton.BTN_RIGHT.name, 0),
     ]
     actual_codes_and_values = [
@@ -116,9 +116,16 @@ def test_mouse_scroll_events(
         # Scroll down
         driver.send_mouse_state(pych9329.MouseInput(scroll=-3))
 
-    # Scroll events should be captured
-    print(capture_session.events)
-    assert len(capture_session.events) == 2
+    expected_codes_and_values = [
+        ("REL_WHEEL", 3),
+        ("REL_WHEEL_HI_RES", 360),
+        ("REL_WHEEL", -3),
+        ("REL_WHEEL_HI_RES", -360),
+    ]
+    actual_codes_and_values = [
+        (event.code_name, event.value) for event in capture_session.events
+    ]
+    assert actual_codes_and_values == expected_codes_and_values
 
 
 def test_mouse_button_with_movement(
@@ -137,9 +144,17 @@ def test_mouse_button_with_movement(
         # Release button
         driver.send_mouse_state(pych9329.MouseInput())
 
-    # Should capture button press, movement, and button release
-    # At least: BTN_LEFT press, REL_X, REL_Y, BTN_LEFT release
-    assert len(capture_session.events) >= 4
+    expected_codes_and_values = [
+        (f"('{pych9329.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 1),
+        ("REL_X", 5),
+        ("REL_Y", 5),
+        (f"('{pych9329.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 0),
+    ]
+    actual_codes_and_values = [
+        (event.code_name, event.value) for event in capture_session.events
+    ]
+
+    assert actual_codes_and_values == expected_codes_and_values
 
 
 def test_mouse_all_buttons(
@@ -155,10 +170,14 @@ def test_mouse_all_buttons(
             driver.send_mouse_state(pych9329.MouseInput(buttons={button}))
             driver.send_mouse_state(pych9329.MouseInput())
 
-    expected_codes_and_values: list[tuple[str, int]] = []
-    for button in pych9329.MouseButton:
-        expected_codes_and_values.append((button.name, 1))
-        expected_codes_and_values.append((button.name, 0))
+    expected_codes_and_values: list[tuple[str, int]] = [
+        (f"('{pych9329.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 1),
+        (f"('{pych9329.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 0),
+        (pych9329.MouseButton.BTN_RIGHT.name, 1),
+        (pych9329.MouseButton.BTN_RIGHT.name, 0),
+        (pych9329.MouseButton.BTN_MIDDLE.name, 1),
+        (pych9329.MouseButton.BTN_MIDDLE.name, 0),
+    ]
 
     actual_codes_and_values = [
         (event.code_name, event.value) for event in capture_session.events

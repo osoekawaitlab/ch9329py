@@ -259,7 +259,7 @@ class KeyboardInput(BaseCh9329Model):
     """
 
     modifiers: set[ModifierKey] = Field(default_factory=set)
-    keys: list[KeyCode] = Field(default_factory=list, max_items=MAX_ROLLOVER_KEYS)
+    keys: list[KeyCode] = Field(default_factory=list, max_length=MAX_ROLLOVER_KEYS)
 
 
 class MouseInput(BaseCh9329Model):
