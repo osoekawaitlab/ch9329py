@@ -173,28 +173,28 @@ class TestMediaKey:
     """Tests for MediaKey enum."""
 
     def test_mute_value(self) -> None:
-        """Test that MUTE key has correct packet data."""
-        assert MediaKey.MUTE.value == (0x02, 0x04, 0x00, 0x00)
+        """Test that KEY_MUTE key has correct packet data."""
+        assert MediaKey.KEY_MUTE.value == (0x02, 0x04, 0x00, 0x00)
 
     def test_volume_up_value(self) -> None:
-        """Test that VOLUME_UP key has correct packet data."""
-        assert MediaKey.VOLUME_UP.value == (0x02, 0x01, 0x00, 0x00)
+        """Test that KEY_VOLUMEUP key has correct packet data."""
+        assert MediaKey.KEY_VOLUMEUP.value == (0x02, 0x01, 0x00, 0x00)
 
     def test_volume_down_value(self) -> None:
-        """Test that VOLUME_DOWN key has correct packet data."""
-        assert MediaKey.VOLUME_DOWN.value == (0x02, 0x02, 0x00, 0x00)
+        """Test that KEY_VOLUMEDOWN key has correct packet data."""
+        assert MediaKey.KEY_VOLUMEDOWN.value == (0x02, 0x02, 0x00, 0x00)
 
     def test_play_pause_value(self) -> None:
-        """Test that PLAY_PAUSE key has correct packet data."""
-        assert MediaKey.PLAY_PAUSE.value == (0x02, 0x08, 0x00, 0x00)
+        """Test that KEY_PLAYPAUSE key has correct packet data."""
+        assert MediaKey.KEY_PLAYPAUSE.value == (0x02, 0x08, 0x00, 0x00)
 
     def test_next_track_value(self) -> None:
-        """Test that NEXT_TRACK key has correct packet data."""
-        assert MediaKey.NEXT_TRACK.value == (0x02, 0x10, 0x00, 0x00)
+        """Test that KEY_NEXTSONG key has correct packet data."""
+        assert MediaKey.KEY_NEXTSONG.value == (0x02, 0x10, 0x00, 0x00)
 
     def test_prev_track_value(self) -> None:
-        """Test that PREV_TRACK key has correct packet data."""
-        assert MediaKey.PREV_TRACK.value == (0x02, 0x20, 0x00, 0x00)
+        """Test that KEY_PREVIOUSSONG key has correct packet data."""
+        assert MediaKey.KEY_PREVIOUSSONG.value == (0x02, 0x20, 0x00, 0x00)
 
 
 class TestKeyboardInput:
@@ -408,3 +408,66 @@ class TestMouseInput:
             ValidationError, match=r".*Input should be less than or equal to 127.*"
         ):
             MouseInput(scroll=128)
+
+
+class TestMediaKeyInput:
+    """Tests for MediaKeyInput data model."""
+
+    def test_empty_state(self) -> None:
+        """Test creating an empty media key state (all keys released)."""
+        from pych9329.models import MediaKeyInput
+
+        input_data = MediaKeyInput()
+        assert input_data.keys == []
+
+    def test_single_media_key(self) -> None:
+        """Test creating input with single media key."""
+        from pych9329.models import MediaKeyInput
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_MUTE])
+        assert input_data.keys == [MediaKey.KEY_MUTE]
+
+    def test_play_pause_key(self) -> None:
+        """Test creating input with play/pause key."""
+        from pych9329.models import MediaKeyInput
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_PLAYPAUSE])
+        assert input_data.keys == [MediaKey.KEY_PLAYPAUSE]
+
+    def test_volume_up_key(self) -> None:
+        """Test creating input with volume up key."""
+        from pych9329.models import MediaKeyInput
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_VOLUMEUP])
+        assert input_data.keys == [MediaKey.KEY_VOLUMEUP]
+
+    def test_volume_down_key(self) -> None:
+        """Test creating input with volume down key."""
+        from pych9329.models import MediaKeyInput
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_VOLUMEDOWN])
+        assert input_data.keys == [MediaKey.KEY_VOLUMEDOWN]
+
+    def test_next_track_key(self) -> None:
+        """Test creating input with next track key."""
+        from pych9329.models import MediaKeyInput
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_NEXTSONG])
+        assert input_data.keys == [MediaKey.KEY_NEXTSONG]
+
+    def test_prev_track_key(self) -> None:
+        """Test creating input with previous track key."""
+        from pych9329.models import MediaKeyInput
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_PREVIOUSSONG])
+        assert input_data.keys == [MediaKey.KEY_PREVIOUSSONG]
+
+    def test_more_than_one_key_raises_error(self) -> None:
+        """Test that providing more than one key raises validation error."""
+        import pytest
+        from pydantic import ValidationError
+
+        from pych9329.models import MediaKeyInput
+
+        with pytest.raises(ValidationError):
+            MediaKeyInput(keys=[MediaKey.KEY_MUTE, MediaKey.KEY_VOLUMEUP])

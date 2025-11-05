@@ -113,18 +113,19 @@ class KeyCode(Enum):
 class MediaKey(Enum):
     """Media control key constants.
 
+    These values follow evdev key code naming convention.
     Values are tuples of (byte1, byte2, byte3, byte4) that represent
     the media control packet data.
     """
 
-    EJECT = (0x02, 0x80, 0x00, 0x00)
-    CD_STOP = (0x02, 0x40, 0x00, 0x00)
-    PREV_TRACK = (0x02, 0x20, 0x00, 0x00)
-    NEXT_TRACK = (0x02, 0x10, 0x00, 0x00)
-    PLAY_PAUSE = (0x02, 0x08, 0x00, 0x00)
-    MUTE = (0x02, 0x04, 0x00, 0x00)
-    VOLUME_DOWN = (0x02, 0x02, 0x00, 0x00)
-    VOLUME_UP = (0x02, 0x01, 0x00, 0x00)
+    KEY_EJECTCD = (0x02, 0x80, 0x00, 0x00)
+    KEY_STOPCD = (0x02, 0x40, 0x00, 0x00)
+    KEY_PREVIOUSSONG = (0x02, 0x20, 0x00, 0x00)
+    KEY_NEXTSONG = (0x02, 0x10, 0x00, 0x00)
+    KEY_PLAYPAUSE = (0x02, 0x08, 0x00, 0x00)
+    KEY_MUTE = (0x02, 0x04, 0x00, 0x00)
+    KEY_VOLUMEDOWN = (0x02, 0x02, 0x00, 0x00)
+    KEY_VOLUMEUP = (0x02, 0x01, 0x00, 0x00)
 
 
 def _build_character_map() -> dict[str, tuple[int, int]]:
@@ -300,3 +301,32 @@ class MouseInput(BaseCh9329Model):
     x: int = Field(default=0, ge=-128, le=127)
     y: int = Field(default=0, ge=-128, le=127)
     scroll: int = Field(default=0, ge=-127, le=127)
+
+
+class MediaKeyInput(BaseCh9329Model):
+    """Represents media key input for CH9329.
+
+    This model corresponds to the USB HID media control packet. Unlike keyboard
+    input which supports 6 simultaneous keys, media keys only support single
+    key press at a time.
+
+    Args:
+        keys: List of media keys (maximum 1 key). Empty list releases all keys.
+
+    Raises:
+        ValueError: If more than 1 key is provided.
+
+    Examples:
+        >>> # Mute audio (press)
+        >>> input_data = MediaKeyInput(keys=[MediaKey.KEY_MUTE])
+        >>> # Play/pause media (press)
+        >>> input_data = MediaKeyInput(keys=[MediaKey.KEY_PLAYPAUSE])
+        >>> # Adjust volume (press)
+        >>> input_data = MediaKeyInput(keys=[MediaKey.KEY_VOLUMEUP])
+        >>> # Release all keys
+        >>> input_data = MediaKeyInput(keys=[])
+        >>> # or simply
+        >>> input_data = MediaKeyInput()
+    """
+
+    keys: list[MediaKey] = Field(default_factory=list, max_length=1)

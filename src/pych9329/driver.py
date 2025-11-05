@@ -23,6 +23,7 @@ from pych9329.models import (
     KeyboardInput,
     KeyCode,
     MediaKey,
+    MediaKeyInput,
     MouseButton,
     MouseInput,
     get_key_mapping,
@@ -459,6 +460,46 @@ class CH9329Driver:
         )
         self._adapter.send(packet)
 
+    def send_media_key_input(self, input_data: MediaKeyInput) -> None:
+        """Send a media key input.
+
+        This is a low-level API that directly sends media key state.
+        Unlike keyboard input which supports 6 simultaneous keys,
+        media keys only support single key at a time.
+
+        Args:
+            input_data: The media key input containing keys to press or release.
+
+        Examples:
+            >>> # Mute audio (press)
+            >>> input_data = MediaKeyInput(keys=[MediaKey.KEY_MUTE])
+            >>> driver.send_media_key_input(input_data)
+            >>>
+            >>> # Play/pause media (press)
+            >>> input_data = MediaKeyInput(keys=[MediaKey.KEY_PLAYPAUSE])
+            >>> driver.send_media_key_input(input_data)
+            >>>
+            >>> # Adjust volume (press)
+            >>> input_data = MediaKeyInput(keys=[MediaKey.KEY_VOLUMEUP])
+            >>> driver.send_media_key_input(input_data)
+            >>>
+            >>> # Release all keys
+            >>> input_data = MediaKeyInput(keys=[])
+            >>> driver.send_media_key_input(input_data)
+        """
+        if not input_data.keys:
+            # Empty keys list means release all media keys
+            packet = CH9329Protocol.build_media_release_packet()
+            self._adapter.send(packet)
+        else:
+            # Press the single media key
+            # Extract the 4-byte media key code from the enum value
+            data0, data1, data2, data3 = input_data.keys[0].value
+
+            # Build packet using protocol
+            packet = CH9329Protocol.build_media_press_packet(data0, data1, data2, data3)
+            self._adapter.send(packet)
+
     def media_key_down(self, key: MediaKey) -> None:
         """Press a media control key down without releasing it.
 
@@ -468,7 +509,7 @@ class CH9329Driver:
             key: The media key to press down.
 
         Examples:
-            >>> driver.media_key_down(MediaKey.VOLUME_UP)
+            >>> driver.media_key_down(MediaKey.KEY_VOLUMEUP)
             >>> driver.media_key_up()
         """
         # Send media key press packet
@@ -486,7 +527,7 @@ class CH9329Driver:
         """Release the currently pressed media key.
 
         Examples:
-            >>> driver.media_key_down(MediaKey.MUTE)
+            >>> driver.media_key_down(MediaKey.KEY_MUTE)
             >>> # ... wait ...
             >>> driver.media_key_up()
         """
@@ -508,9 +549,9 @@ class CH9329Driver:
             key: The media key to press.
 
         Examples:
-            >>> driver.press_media_key(MediaKey.MUTE)
-            >>> driver.press_media_key(MediaKey.VOLUME_UP)
-            >>> driver.press_media_key(MediaKey.PLAY_PAUSE)
+            >>> driver.press_media_key(MediaKey.KEY_MUTE)
+            >>> driver.press_media_key(MediaKey.KEY_VOLUMEUP)
+            >>> driver.press_media_key(MediaKey.KEY_PLAYPAUSE)
         """
         self.media_key_down(key)
         self.media_key_up()

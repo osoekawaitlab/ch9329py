@@ -183,27 +183,27 @@ class TestMediaKeyDownOperation:
     def test_execute_calls_driver_media_key_down(self) -> None:
         """Test that execute() calls driver.media_key_down()."""
         driver = MagicMock()
-        operation = MediaKeyDownOperation(MediaKey.MUTE)
+        operation = MediaKeyDownOperation(MediaKey.KEY_MUTE)
 
         operation.execute(driver)
 
-        driver.media_key_down.assert_called_once_with(MediaKey.MUTE)
+        driver.media_key_down.assert_called_once_with(MediaKey.KEY_MUTE)
 
     def test_to_dict_serializes_correctly(self) -> None:
         """Test that to_dict() serializes the operation."""
-        operation = MediaKeyDownOperation(MediaKey.VOLUME_UP)
+        operation = MediaKeyDownOperation(MediaKey.KEY_VOLUMEUP)
 
         result = operation.to_dict()
 
-        assert result == {"type": "media_key_down", "key": "VOLUME_UP"}
+        assert result == {"type": "media_key_down", "key": "KEY_VOLUMEUP"}
 
     def test_from_dict_deserializes_correctly(self) -> None:
         """Test that from_dict() deserializes the operation."""
-        data = {"type": "media_key_down", "key": "PLAY_PAUSE"}
+        data = {"type": "media_key_down", "key": "KEY_PLAYPAUSE"}
 
         operation = MediaKeyDownOperation.from_dict(data)
 
-        assert operation.key == MediaKey.PLAY_PAUSE
+        assert operation.key == MediaKey.KEY_PLAYPAUSE
 
 
 class TestMediaKeyUpOperation:
@@ -552,7 +552,7 @@ class TestOperationFromDict:
                 MouseButtonDownOperation,
             ),
             ({"type": "mouse_button_up"}, MouseButtonUpOperation),
-            ({"type": "media_key_down", "key": "MUTE"}, MediaKeyDownOperation),
+            ({"type": "media_key_down", "key": "KEY_MUTE"}, MediaKeyDownOperation),
             ({"type": "media_key_up"}, MediaKeyUpOperation),
             (
                 {"type": "mouse_move_absolute", "x": 100, "y": 200},

@@ -207,7 +207,7 @@ class TestCH9329DriverMedia:
         mock_adapter = Mock()
         driver = CH9329Driver(mock_adapter)
 
-        driver.press_media_key(MediaKey.MUTE)
+        driver.press_media_key(MediaKey.KEY_MUTE)
 
         # Should send press and release packets
         assert mock_adapter.send.call_count == 2
@@ -217,7 +217,7 @@ class TestCH9329DriverMedia:
         mock_adapter = Mock()
         driver = CH9329Driver(mock_adapter)
 
-        driver.press_media_key(MediaKey.VOLUME_UP)
+        driver.press_media_key(MediaKey.KEY_VOLUMEUP)
 
         assert mock_adapter.send.call_count == 2
 
@@ -226,7 +226,7 @@ class TestCH9329DriverMedia:
         mock_adapter = Mock()
         driver = CH9329Driver(mock_adapter)
 
-        driver.press_media_key(MediaKey.PLAY_PAUSE)
+        driver.press_media_key(MediaKey.KEY_PLAYPAUSE)
 
         assert mock_adapter.send.call_count == 2
 
@@ -380,7 +380,7 @@ class TestCH9329DriverSeparatedMedia:
         mock_adapter = Mock()
         driver = CH9329Driver(mock_adapter)
 
-        driver.media_key_down(MediaKey.MUTE)
+        driver.media_key_down(MediaKey.KEY_MUTE)
 
         # Should send only press packet
         mock_adapter.send.assert_called_once()
@@ -400,7 +400,7 @@ class TestCH9329DriverSeparatedMedia:
         mock_adapter = Mock()
         driver = CH9329Driver(mock_adapter)
 
-        driver.media_key_down(MediaKey.VOLUME_UP)
+        driver.media_key_down(MediaKey.KEY_VOLUMEUP)
         driver.media_key_up()
 
         # Should have sent 2 packets total
@@ -466,7 +466,7 @@ class TestCH9329DriverBackwardCompatibility:
         mock_adapter = Mock()
         driver = CH9329Driver(mock_adapter)
 
-        driver.press_media_key(MediaKey.MUTE)
+        driver.press_media_key(MediaKey.KEY_MUTE)
 
         # Should send 2 packets (press and release)
         assert mock_adapter.send.call_count == 2
@@ -697,3 +697,127 @@ class TestCH9329DriverSendMouseInput:
         assert packet[7] == 10
         assert packet[8] == 0x100 - 10
         assert packet[9] == 5
+
+
+class TestCH9329DriverSendMediaKeyInput:
+    """Tests for send_media_key_input() low-level API."""
+
+    def test_empty_state_releases_all_keys(self) -> None:
+        """Test sending empty state releases all media keys."""
+        from pych9329.models import MediaKeyInput
+
+        mock_adapter = Mock()
+        driver = CH9329Driver(mock_adapter)
+
+        input_data = MediaKeyInput(keys=[])
+        driver.send_media_key_input(input_data)
+
+        # Should send release packet
+        assert mock_adapter.send.call_count == 1
+        packet = mock_adapter.send.call_args[0][0]
+
+        # Check packet structure for release
+        assert len(packet) == 10
+        assert packet[0:5] == b"\x57\xab\x00\x03\x04"
+        assert packet[5] == 0x02  # data0
+        assert packet[6] == 0x00  # data1 - release
+        assert packet[7] == 0x00  # data2
+        assert packet[8] == 0x00  # data3
+
+    def test_mute_key(self) -> None:
+        """Test sending mute media key."""
+        from pych9329.models import MediaKeyInput
+
+        mock_adapter = Mock()
+        driver = CH9329Driver(mock_adapter)
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_MUTE])
+        driver.send_media_key_input(input_data)
+
+        # Should send one packet
+        assert mock_adapter.send.call_count == 1
+        packet = mock_adapter.send.call_args[0][0]
+
+        # Check packet structure: header + cmd + len + [data0, data1, data2, data3] + checksum
+        # MediaKey.KEY_MUTE = (0x02, 0x04, 0x00, 0x00)
+        assert len(packet) == 10
+        assert packet[0:5] == b"\x57\xab\x00\x03\x04"
+        assert packet[5] == 0x02  # data0
+        assert packet[6] == 0x04  # data1 - MUTE code
+        assert packet[7] == 0x00  # data2
+        assert packet[8] == 0x00  # data3
+
+    def test_volume_up_key(self) -> None:
+        """Test sending volume up media key."""
+        from pych9329.models import MediaKeyInput
+
+        mock_adapter = Mock()
+        driver = CH9329Driver(mock_adapter)
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_VOLUMEUP])
+        driver.send_media_key_input(input_data)
+
+        packet = mock_adapter.send.call_args[0][0]
+        # MediaKey.KEY_VOLUMEUP = (0x02, 0x01, 0x00, 0x00)
+        assert packet[5] == 0x02
+        assert packet[6] == 0x01  # VOLUME_UP code
+
+    def test_volume_down_key(self) -> None:
+        """Test sending volume down media key."""
+        from pych9329.models import MediaKeyInput
+
+        mock_adapter = Mock()
+        driver = CH9329Driver(mock_adapter)
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_VOLUMEDOWN])
+        driver.send_media_key_input(input_data)
+
+        packet = mock_adapter.send.call_args[0][0]
+        # MediaKey.KEY_VOLUMEDOWN = (0x02, 0x02, 0x00, 0x00)
+        assert packet[5] == 0x02
+        assert packet[6] == 0x02  # VOLUME_DOWN code
+
+    def test_play_pause_key(self) -> None:
+        """Test sending play/pause media key."""
+        from pych9329.models import MediaKeyInput
+
+        mock_adapter = Mock()
+        driver = CH9329Driver(mock_adapter)
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_PLAYPAUSE])
+        driver.send_media_key_input(input_data)
+
+        packet = mock_adapter.send.call_args[0][0]
+        # MediaKey.KEY_PLAYPAUSE = (0x02, 0x08, 0x00, 0x00)
+        assert packet[5] == 0x02
+        assert packet[6] == 0x08  # PLAY_PAUSE code
+
+    def test_next_track_key(self) -> None:
+        """Test sending next track media key."""
+        from pych9329.models import MediaKeyInput
+
+        mock_adapter = Mock()
+        driver = CH9329Driver(mock_adapter)
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_NEXTSONG])
+        driver.send_media_key_input(input_data)
+
+        packet = mock_adapter.send.call_args[0][0]
+        # MediaKey.KEY_NEXTSONG = (0x02, 0x10, 0x00, 0x00)
+        assert packet[5] == 0x02
+        assert packet[6] == 0x10  # NEXT_TRACK code
+
+    def test_prev_track_key(self) -> None:
+        """Test sending previous track media key."""
+        from pych9329.models import MediaKeyInput
+
+        mock_adapter = Mock()
+        driver = CH9329Driver(mock_adapter)
+
+        input_data = MediaKeyInput(keys=[MediaKey.KEY_PREVIOUSSONG])
+        driver.send_media_key_input(input_data)
+
+        packet = mock_adapter.send.call_args[0][0]
+        # MediaKey.KEY_PREVIOUSSONG = (0x02, 0x20, 0x00, 0x00)
+        assert packet[5] == 0x02
+        assert packet[6] == 0x20  # PREV_TRACK code
