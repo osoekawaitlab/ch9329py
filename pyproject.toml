@@ -28,6 +28,7 @@ dev = [
     "types-pyserial>=3.5.0.20251001",
 ]
 docs = [
+    "griffe-pydantic>=1.1.8",
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.6.22",
     "mkdocstrings>=0.30.1",

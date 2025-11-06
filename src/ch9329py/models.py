@@ -141,7 +141,7 @@ class KeyboardInput(BaseCh9329Model):
     This model directly corresponds to the USB HID keyboard packet structure,
     which supports up to 8 modifier keys and 6 simultaneous regular keys.
 
-    Args:
+    Attributes:
         modifiers: Set of modifier keys (Ctrl, Shift, Alt, Meta).
         keys: List of regular keys (maximum 6 keys).
 
@@ -177,7 +177,7 @@ class MouseInput(BaseCh9329Model):
     which supports multiple simultaneous button presses, relative movement,
     and scroll wheel input.
 
-    Args:
+    Attributes:
         buttons: Set of mouse buttons currently pressed.
         x: Relative X movement (-128 to 127).
         y: Relative Y movement (-128 to 127).
@@ -217,7 +217,7 @@ class MediaKeyInput(BaseCh9329Model):
     input which supports 6 simultaneous keys, media keys only support single
     key press at a time.
 
-    Args:
+    Attributes:
         keys: List of media keys (maximum 1 key). Empty list releases all keys.
 
     Raises:

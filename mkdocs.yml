@@ -1,10 +1,10 @@
-site_name: pych9329
+site_name: ch9329py
 site_description: Modern Python driver for CH9329 USB HID device
 site_author: osoken
-site_url: https://github.com/yourusername/pych9329
+site_url: https://github.com/osoekawaitlab/ch9329py
 
-repo_name: yourusername/pych9329
-repo_url: https://github.com/yourusername/pych9329
+repo_name: osoekawaitlab/ch9329py
+repo_url: https://github.com/osoekawaitlab/ch9329py
 edit_uri: edit/main/docs/
 
 theme:
@@ -38,17 +38,6 @@ theme:
 
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - Quick Start: quickstart.md
-  - Examples: examples.md
-  - Migration Guide: migration-guide.md
-  - API Reference:
-      - Overview: api/index.md
-      - Driver: api/driver.md
-      - Recorder: api/recorder.md
-      - Adapter: api/adapter.md
-      - Models: api/models.md
-      - Protocol: api/protocol.md
 
 plugins:
   - search:
@@ -57,6 +46,9 @@ plugins:
       handlers:
         python:
           options:
+            extensions:
+              - griffe_pydantic:
+                  schema: true
             docstring_style: google
             docstring_section_style: table
             show_source: true
@@ -97,8 +89,6 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/yourusername/pych9329
-    - icon: fontawesome/brands/python
-      link: https://pypi.org/project/pych9329
+      link: https://github.com/osoekawaitlab/ch9329py
 
-copyright: Copyright &copy; 2024 osoken
+copyright: Copyright &copy; 2025 osoken
