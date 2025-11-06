@@ -1,11 +1,11 @@
-"""Exceptions for pych9329 library."""
+"""Exceptions for ch9329py library."""
 
 
-class Pych9329Error(Exception):
-    """Base exception for pych9329 library."""
+class CH9329PyError(Exception):
+    """Base exception for ch9329py library."""
 
 
-class UnsupportedEvdevCodeError(Pych9329Error):
+class UnsupportedEvdevCodeError(CH9329PyError):
     """Raised when an evdev code is not supported by CH9329.
 
     Args:

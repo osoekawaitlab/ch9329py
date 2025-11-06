@@ -4,7 +4,7 @@ import pytest
 from evdev import ecodes
 from pydantic import ValidationError
 
-from pych9329.models import (
+from ch9329py.models import (
     KeyboardInput,
     KeyCode,
     MediaKey,

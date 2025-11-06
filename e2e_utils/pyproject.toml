@@ -2,7 +2,7 @@
 name = "e2e-utils"
 version = "0.0.0"
 requires-python = ">=3.10"
-description = "End-to-end test utilities for pych9329."
+description = "End-to-end test utilities for ch9329py."
 dependencies = [
     "hid-interceptor",
     "hid-recorder",

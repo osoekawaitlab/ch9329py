@@ -1,4 +1,4 @@
-"""End-to-end test utilities for pych9329."""
+"""End-to-end test utilities for ch9329py."""
 
 from collections.abc import Generator
 from types import TracebackType

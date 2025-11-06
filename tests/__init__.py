@@ -1,1 +1,1 @@
-"""Tests for pych9329 package."""
+"""Tests for ch9329py package."""

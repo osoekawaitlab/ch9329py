@@ -1,6 +1,6 @@
 """Test heterogeneous input events: keyboard, mouse and media keys."""
 
-import pych9329
+import ch9329py
 from e2e_utils import InputCaptureSessionManager
 
 
@@ -11,30 +11,30 @@ def test_keyboard_and_media_key_events(
     capture_session = input_capture_session_manager.start_session(
         name="keyboard_and_media_key_events"
     )
-    with capture_session, pych9329.SerialAdapter(port="/dev/ttyUSB0") as serial_adapter:
-        driver = pych9329.CH9329Driver(serial_adapter)
+    with capture_session, ch9329py.SerialAdapter(port="/dev/ttyUSB0") as serial_adapter:
+        driver = ch9329py.CH9329Driver(serial_adapter)
         driver.send_keyboard_input(
-            pych9329.KeyboardInput(
-                modifiers={pych9329.ModifierKey.KEY_LEFTCTRL},
-                keys=[pych9329.KeyCode.KEY_A],
+            ch9329py.KeyboardInput(
+                modifiers={ch9329py.ModifierKey.KEY_LEFTCTRL},
+                keys=[ch9329py.KeyCode.KEY_A],
             )
         )
 
         # Send media key input: Volume Up
         driver.send_media_key_input(
-            pych9329.MediaKeyInput(keys=[pych9329.MediaKey.KEY_VOLUMEUP])
+            ch9329py.MediaKeyInput(keys=[ch9329py.MediaKey.KEY_VOLUMEUP])
         )
         driver.send_keyboard_input(
-            pych9329.KeyboardInput(
-                modifiers={pych9329.ModifierKey.KEY_LEFTSHIFT},
-                keys=[pych9329.KeyCode.KEY_Z],
+            ch9329py.KeyboardInput(
+                modifiers={ch9329py.ModifierKey.KEY_LEFTSHIFT},
+                keys=[ch9329py.KeyCode.KEY_Z],
             )
         )  # Keep keys pressed
         driver.send_media_key_input(
-            pych9329.MediaKeyInput(keys=[pych9329.MediaKey.KEY_VOLUMEDOWN])
+            ch9329py.MediaKeyInput(keys=[ch9329py.MediaKey.KEY_VOLUMEDOWN])
         )
-        driver.send_media_key_input(pych9329.MediaKeyInput(keys=[]))  # Release all
-        driver.send_keyboard_input(pych9329.KeyboardInput())  # Release all keys
+        driver.send_media_key_input(ch9329py.MediaKeyInput(keys=[]))  # Release all
+        driver.send_keyboard_input(ch9329py.KeyboardInput())  # Release all keys
 
     expected_codes_and_values = [
         ("KEY_LEFTCTRL", 1),
@@ -47,8 +47,8 @@ def test_keyboard_and_media_key_events(
         ("KEY_VOLUMEUP", 0),
         ("KEY_VOLUMEDOWN", 1),
         ("KEY_VOLUMEDOWN", 0),
-        ("KEY_LEFTSHIFT", 0),
         ("KEY_Z", 0),
+        ("KEY_LEFTSHIFT", 0),
     ]
     actual_codes_and_values = [
         (event.code_name, event.value) for event in capture_session.events
@@ -63,46 +63,46 @@ def test_shift_left_drag_mouse(
     capture_session = input_capture_session_manager.start_session(
         name="shift_left_drag_mouse"
     )
-    with capture_session, pych9329.SerialAdapter(port="/dev/ttyUSB0") as serial_adapter:
-        driver = pych9329.CH9329Driver(serial_adapter)
+    with capture_session, ch9329py.SerialAdapter(port="/dev/ttyUSB0") as serial_adapter:
+        driver = ch9329py.CH9329Driver(serial_adapter)
         driver.send_keyboard_input(
-            pych9329.KeyboardInput(
-                modifiers={pych9329.ModifierKey.KEY_LEFTSHIFT},
+            ch9329py.KeyboardInput(
+                modifiers={ch9329py.ModifierKey.KEY_LEFTSHIFT},
                 keys=[],
             )
         )
         driver.send_mouse_input(
-            pych9329.MouseInput(
-                buttons={pych9329.MouseButton.BTN_LEFT},
+            ch9329py.MouseInput(
+                buttons={ch9329py.MouseButton.BTN_LEFT},
                 x=20,
                 y=15,
             )
         )
         driver.send_mouse_input(
-            pych9329.MouseInput(
-                buttons={pych9329.MouseButton.BTN_LEFT},
+            ch9329py.MouseInput(
+                buttons={ch9329py.MouseButton.BTN_LEFT},
                 x=20,
                 y=15,
             )
         )
         # Release left mouse button
         driver.send_mouse_input(
-            pych9329.MouseInput(
+            ch9329py.MouseInput(
                 buttons=set(),
                 x=0,
                 y=0,
             )
         )
-        driver.send_keyboard_input(pych9329.KeyboardInput())
+        driver.send_keyboard_input(ch9329py.KeyboardInput())
 
     expected_codes_and_values = [
         ("KEY_LEFTSHIFT", 1),
-        (f"('{pych9329.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 1),
+        (f"('{ch9329py.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 1),
         ("REL_X", 20),
         ("REL_Y", 15),
         ("REL_X", 20),
         ("REL_Y", 15),
-        (f"('{pych9329.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 0),
+        (f"('{ch9329py.MouseButton.BTN_LEFT.name}', 'BTN_MOUSE')", 0),
         ("KEY_LEFTSHIFT", 0),
     ]
     actual_codes_and_values = [

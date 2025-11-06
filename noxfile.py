@@ -1,4 +1,4 @@
-"""Nox configuration file for pych9329 project."""
+"""Nox configuration file for ch9329py project."""
 
 import nox
 
@@ -13,7 +13,7 @@ def tests(session: nox.Session) -> None:
     session.install("-e", ".", "--group=dev")
     session.run(
         "pytest",
-        "--cov=src/pych9329",
+        "--cov=src/ch9329py",
         "--cov-report=term-missing",
         "--cov-report=html",
         "--cov-fail-under=95",

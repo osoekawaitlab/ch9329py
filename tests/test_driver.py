@@ -2,14 +2,14 @@
 
 from unittest.mock import Mock
 
-from pych9329.adapter import CommunicationAdapter
-from pych9329.driver import CH9329Driver
-from pych9329.evdev_mapping import (
+from ch9329py.adapter import CommunicationAdapter
+from ch9329py.driver import CH9329Driver
+from ch9329py.evdev_mapping import (
     evdev_to_usb_hid_keyboard,
     evdev_to_usb_hid_modifier,
     evdev_to_usb_hid_mouse,
 )
-from pych9329.models import (
+from ch9329py.models import (
     KeyboardInput,
     KeyCode,
     MediaKey,

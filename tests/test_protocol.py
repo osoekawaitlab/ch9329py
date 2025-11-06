@@ -1,6 +1,6 @@
 """Tests for CH9329 protocol packet building."""
 
-from pych9329.protocol import CH9329Protocol
+from ch9329py.protocol import CH9329Protocol
 
 
 class TestKeyboardPackets:

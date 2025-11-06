@@ -5,7 +5,7 @@ requires-python = ">=3.10"
 [manifest]
 members = [
     "e2e-utils",
-    "pych9329",
+    "ch9329py",
 ]
 
 [[package]]
@@ -782,7 +782,7 @@ wheels = [
 ]
 
 [[package]]
-name = "pych9329"
+name = "ch9329py"
 source = { editable = "." }
 dependencies = [
     { name = "evdev" },

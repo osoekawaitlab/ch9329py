@@ -5,7 +5,7 @@ USB HID devices. The CH9329 chip allows simulation of keyboard, mouse, and
 media key inputs through serial communication.
 
 Basic usage:
-    >>> from pych9329 import CH9329Driver, SerialAdapter, KeyboardInput, KeyCode
+    >>> from ch9329py import CH9329Driver, SerialAdapter, KeyboardInput, KeyCode
     >>> adapter = SerialAdapter("/dev/ttyUSB0", 9600)
     >>> driver = CH9329Driver(adapter)
     >>> input_data = KeyboardInput(keys=[KeyCode.KEY_A])
@@ -19,10 +19,10 @@ Context manager usage:
     ...         driver.send_keyboard_input(input_data)
 """
 
-from pych9329.adapter import CommunicationAdapter, SerialAdapter
-from pych9329.driver import CH9329Driver
-from pych9329.exceptions import Pych9329Error, UnsupportedEvdevCodeError
-from pych9329.models import (
+from ch9329py.adapter import CommunicationAdapter, SerialAdapter
+from ch9329py.driver import CH9329Driver
+from ch9329py.exceptions import CH9329PyError, UnsupportedEvdevCodeError
+from ch9329py.models import (
     KeyboardInput,
     KeyCode,
     MediaKey,
@@ -36,6 +36,7 @@ __version__ = "0.2.0"
 
 __all__ = [
     "CH9329Driver",
+    "CH9329PyError",
     "CommunicationAdapter",
     "KeyCode",
     "KeyboardInput",
@@ -44,7 +45,6 @@ __all__ = [
     "ModifierKey",
     "MouseButton",
     "MouseInput",
-    "Pych9329Error",
     "SerialAdapter",
     "UnsupportedEvdevCodeError",
     "__version__",

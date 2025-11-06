@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
-from pych9329.adapter import CommunicationAdapter, SerialAdapter
+from ch9329py.adapter import CommunicationAdapter, SerialAdapter
 
 
 class TestCommunicationAdapter:
@@ -19,7 +19,7 @@ class TestCommunicationAdapter:
 class TestSerialAdapter:
     """Tests for SerialAdapter implementation."""
 
-    @patch("pych9329.adapter.serial.Serial")
+    @patch("ch9329py.adapter.serial.Serial")
     def test_init_opens_serial_port(self, mock_serial_class: Mock) -> None:
         """Test that initializing SerialAdapter opens the serial port."""
         mock_serial = MagicMock()
@@ -39,7 +39,7 @@ class TestSerialAdapter:
         mock_serial.open.assert_not_called()
         assert adapter is not None
 
-    @patch("pych9329.adapter.serial.Serial")
+    @patch("ch9329py.adapter.serial.Serial")
     def test_init_handles_closed_port(self, mock_serial_class: Mock) -> None:
         """Test that adapter handles already closed port during init."""
         mock_serial = MagicMock()
@@ -52,7 +52,7 @@ class TestSerialAdapter:
         mock_serial.open.assert_called_once()
         assert adapter is not None
 
-    @patch("pych9329.adapter.serial.Serial")
+    @patch("ch9329py.adapter.serial.Serial")
     def test_init_skips_open_if_already_open(self, mock_serial_class: Mock) -> None:
         """Test that adapter doesn't open already open port."""
         mock_serial = MagicMock()
@@ -65,7 +65,7 @@ class TestSerialAdapter:
         mock_serial.open.assert_not_called()
         assert adapter is not None
 
-    @patch("pych9329.adapter.serial.Serial")
+    @patch("ch9329py.adapter.serial.Serial")
     def test_send_writes_and_reads_data(self, mock_serial_class: Mock) -> None:
         """Test that send() writes data and reads response."""
         mock_serial = MagicMock()
@@ -82,8 +82,8 @@ class TestSerialAdapter:
         mock_serial.read.assert_called_once_with(7)
         assert response == b"\x00\x01\x02\x03\x04\x05\x06"
 
-    @patch("pych9329.adapter.serial.Serial")
-    @patch("pych9329.adapter.time.sleep")
+    @patch("ch9329py.adapter.serial.Serial")
+    @patch("ch9329py.adapter.time.sleep")
     def test_send_includes_delay(
         self, mock_sleep: Mock, mock_serial_class: Mock
     ) -> None:
@@ -99,7 +99,7 @@ class TestSerialAdapter:
         # Should sleep for 0.02 seconds (20ms) between write and read
         mock_sleep.assert_called_once_with(0.02)
 
-    @patch("pych9329.adapter.serial.Serial")
+    @patch("ch9329py.adapter.serial.Serial")
     def test_close_closes_serial_port(self, mock_serial_class: Mock) -> None:
         """Test that close() closes the serial port."""
         mock_serial = MagicMock()
@@ -111,7 +111,7 @@ class TestSerialAdapter:
 
         mock_serial.close.assert_called_once()
 
-    @patch("pych9329.adapter.serial.Serial")
+    @patch("ch9329py.adapter.serial.Serial")
     def test_context_manager_closes_on_exit(self, mock_serial_class: Mock) -> None:
         """Test that using adapter as context manager closes port on exit."""
         mock_serial = MagicMock()
@@ -123,7 +123,7 @@ class TestSerialAdapter:
 
         mock_serial.close.assert_called_once()
 
-    @patch("pych9329.adapter.serial.Serial")
+    @patch("ch9329py.adapter.serial.Serial")
     def test_init_raises_error_for_invalid_port(self, mock_serial_class: Mock) -> None:
         """Test that initializing with invalid port raises an error."""
         mock_serial_class.side_effect = OSError("Port not found")
@@ -131,7 +131,7 @@ class TestSerialAdapter:
         with pytest.raises(ConnectionError, match="Failed to open serial port"):
             SerialAdapter("/dev/invalid", 9600)
 
-    @patch("pych9329.adapter.serial.Serial")
+    @patch("ch9329py.adapter.serial.Serial")
     def test_send_raises_error_if_port_closed(self, mock_serial_class: Mock) -> None:
         """Test that send() raises an error if port is closed."""
         mock_serial = MagicMock()

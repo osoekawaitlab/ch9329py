@@ -13,21 +13,21 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import Self
 
-from pych9329.evdev_mapping import (
+from ch9329py.evdev_mapping import (
     evdev_to_usb_hid_keyboard,
     evdev_to_usb_hid_modifier,
     evdev_to_usb_hid_mouse,
 )
-from pych9329.models import (
+from ch9329py.models import (
     MAX_ROLLOVER_KEYS,
     KeyboardInput,
     MediaKeyInput,
     MouseInput,
 )
-from pych9329.protocol import CH9329Protocol
+from ch9329py.protocol import CH9329Protocol
 
 if TYPE_CHECKING:
-    from pych9329.adapter import CommunicationAdapter
+    from ch9329py.adapter import CommunicationAdapter
 
 
 class CH9329Driver:
@@ -40,9 +40,9 @@ class CH9329Driver:
         adapter: Communication adapter for sending/receiving data.
 
     Examples:
-        >>> from pych9329.adapter import SerialAdapter
-        >>> from pych9329.driver import CH9329Driver
-        >>> from pych9329.models import KeyboardInput, KeyCode
+        >>> from ch9329py.adapter import SerialAdapter
+        >>> from ch9329py.driver import CH9329Driver
+        >>> from ch9329py.models import KeyboardInput, KeyCode
         >>> adapter = SerialAdapter("/dev/ttyUSB0", 9600)
         >>> driver = CH9329Driver(adapter)
         >>> state = KeyboardInput(keys=[KeyCode.KEY_A])
