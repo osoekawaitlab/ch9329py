@@ -1,4 +1,4 @@
-# pych9329
+# ch9329py
 
 A modern, type-safe Python driver for the CH9329 USB HID device. Control keyboards, mice, and media keys programmatically with a clean, low-level state-based API.
 
@@ -12,20 +12,20 @@ A modern, type-safe Python driver for the CH9329 USB HID device. Control keyboar
 ### Using uv (recommended)
 
 ```bash
-uv add git+https://github.com/osoekawaitlab/pych9329.git
+uv add git+https://github.com/osoekawaitlab/ch9329py.git
 ```
 
 ### Using pip
 
 ```bash
-pip install git+https://github.com/osoekawaitlab/pych9329.git
+pip install git+https://github.com/osoekawaitlab/ch9329py.git
 ```
 
 ### From source
 
 ```bash
-git clone https://github.com/osoekawaitlab/pych9329.git
-cd pych9329
+git clone https://github.com/osoekawaitlab/ch9329py.git
+cd ch9329py
 uv sync
 ```
 
@@ -34,7 +34,7 @@ uv sync
 ### Basic Example
 
 ```python
-from pych9329 import (
+from ch9329py import (
     CH9329Driver,
     SerialAdapter,
     KeyboardInput,
@@ -58,7 +58,7 @@ with SerialAdapter("/dev/ttyUSB0", 9600) as adapter:
 
 ## 📖 API Overview
 
-pych9329 provides a **state-based API** where you send complete input states to the device. This matches the underlying USB HID protocol and gives you precise control.
+ch9329py provides a **state-based API** where you send complete input states to the device. This matches the underlying USB HID protocol and gives you precise control.
 
 ### Three Core Methods
 
@@ -71,7 +71,7 @@ pych9329 provides a **state-based API** where you send complete input states to 
 ### Basic Keyboard Input
 
 ```python
-from pych9329 import CH9329Driver, SerialAdapter, KeyboardInput, KeyCode
+from ch9329py import CH9329Driver, SerialAdapter, KeyboardInput, KeyCode
 
 with SerialAdapter("/dev/ttyUSB0", 9600) as adapter:
     driver = CH9329Driver(adapter)
@@ -87,7 +87,7 @@ with SerialAdapter("/dev/ttyUSB0", 9600) as adapter:
 ### Keyboard with Modifiers
 
 ```python
-from pych9329 import KeyboardInput, KeyCode, ModifierKey
+from ch9329py import KeyboardInput, KeyCode, ModifierKey
 
 # Ctrl+C
 input_data = KeyboardInput(
@@ -150,7 +150,7 @@ All keys follow evdev naming convention:
 ### Mouse Movement
 
 ```python
-from pych9329 import MouseInput
+from ch9329py import MouseInput
 
 # Relative movement (right 10px, down 10px)
 input_data = MouseInput(x=10, y=10)
@@ -164,7 +164,7 @@ driver.send_mouse_input(input_data)
 ### Mouse Buttons
 
 ```python
-from pych9329 import MouseInput, MouseButton
+from ch9329py import MouseInput, MouseButton
 
 # Press left button
 input_data = MouseInput(buttons={MouseButton.BTN_LEFT})
@@ -230,7 +230,7 @@ driver.send_mouse_input(MouseInput())
 ### Basic Media Keys
 
 ```python
-from pych9329 import MediaKeyInput, MediaKey
+from ch9329py import MediaKeyInput, MediaKey
 
 # Play/pause
 input_data = MediaKeyInput(keys=[MediaKey.KEY_PLAYPAUSE])
@@ -290,7 +290,7 @@ driver.send_media_key_input(MediaKeyInput())  # Release
 The library follows SOLID principles with a clean, layered architecture:
 
 ```text
-pych9329/
+ch9329py/
 ├── models.py          # Data models (input states and enums)
 ├── protocol.py        # Protocol layer (packet building)
 ├── adapter.py         # Communication layer (serial abstraction)
@@ -313,7 +313,7 @@ pych9329/
 You can implement custom adapters for testing or alternative communication methods:
 
 ```python
-from pych9329 import CH9329Driver, CommunicationAdapter
+from ch9329py import CH9329Driver, CommunicationAdapter
 
 class CustomAdapter(CommunicationAdapter):
     def send(self, data: bytes) -> None:
@@ -340,8 +340,8 @@ driver = CH9329Driver(adapter)
 
 ```bash
 # Clone the repository
-git clone https://github.com/osoekawaitlab/pych9329.git
-cd pych9329
+git clone https://github.com/osoekawaitlab/ch9329py.git
+cd ch9329py
 
 # Install dependencies
 uv sync
@@ -354,7 +354,7 @@ uv sync
 uv run pytest
 
 # Run with coverage
-uv run pytest --cov=src/pych9329 --cov-report=html
+uv run pytest --cov=src/ch9329py --cov-report=html
 
 # Run specific test file
 uv run pytest tests/test_driver.py -v
@@ -364,7 +364,7 @@ uv run pytest tests/test_driver.py -v
 
 ```bash
 # Type checking
-uv run mypy src/pych9329
+uv run mypy src/ch9329py
 
 # Linting
 uv run ruff check src/ tests/
