@@ -32,7 +32,7 @@ from ch9329py.models import (
     MouseInput,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 __all__ = [
     "CH9329Driver",
