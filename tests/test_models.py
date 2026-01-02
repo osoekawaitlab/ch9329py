@@ -94,6 +94,22 @@ class TestKeyCode:
         """Test that KEY_Z has correct evdev value."""
         assert KeyCode.KEY_Z.value == ecodes.KEY_Z
 
+    def test_arrow_key_up(self) -> None:
+        """Test that KEY_UP has correct evdev value."""
+        assert KeyCode.KEY_UP.value == ecodes.KEY_UP
+
+    def test_arrow_key_down(self) -> None:
+        """Test that KEY_DOWN has correct evdev value."""
+        assert KeyCode.KEY_DOWN.value == ecodes.KEY_DOWN
+
+    def test_arrow_key_left(self) -> None:
+        """Test that KEY_LEFT has correct evdev value."""
+        assert KeyCode.KEY_LEFT.value == ecodes.KEY_LEFT
+
+    def test_arrow_key_right(self) -> None:
+        """Test that KEY_RIGHT has correct evdev value."""
+        assert KeyCode.KEY_RIGHT.value == ecodes.KEY_RIGHT
+
 
 class TestMediaKey:
     """Tests for MediaKey enum."""

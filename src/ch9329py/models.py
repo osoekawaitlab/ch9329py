@@ -109,6 +109,12 @@ class KeyCode(Enum):
     KEY_YEN = ecodes.KEY_YEN
     KEY_RO = ecodes.KEY_RO
 
+    # Arrow keys
+    KEY_UP = ecodes.KEY_UP
+    KEY_DOWN = ecodes.KEY_DOWN
+    KEY_LEFT = ecodes.KEY_LEFT
+    KEY_RIGHT = ecodes.KEY_RIGHT
+
 
 class MediaKey(Enum):
     """Media control key constants.

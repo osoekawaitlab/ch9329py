@@ -64,6 +64,11 @@ _EVDEV_TO_USB_HID_KEYBOARD: dict[int, int] = {
     ecodes.KEY_SLASH: 0x38,
     ecodes.KEY_RO: 0x87,
     ecodes.KEY_YEN: 0x89,  # INTL_YEN
+    # Arrow keys
+    ecodes.KEY_RIGHT: 0x4F,
+    ecodes.KEY_LEFT: 0x50,
+    ecodes.KEY_DOWN: 0x51,
+    ecodes.KEY_UP: 0x52,
 }
 
 # Mapping from evdev mouse button codes to USB HID mouse button bits
